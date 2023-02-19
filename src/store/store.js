@@ -1,36 +1,43 @@
-import { compose, createStore, applyMiddleware } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { configureStore } from '@reduxjs/toolkit';
+// import { compose, createStore, applyMiddleware } from 'redux';
+// import { persistStore, persistReducer } from 'redux-persist';
+// import storage from 'redux-persist/lib/storage';
 import logger from 'redux-logger';
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 
 import { rootReducer } from './root-reducer';
 
 const middleWares = [
   process.env.NODE_ENV !== 'production' && logger,
-  thunk
 ].filter(Boolean); // Evalution to logger object of node env is not production, or just [] with Boolean function
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['cart'], // only cache cart
-};
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+//   whitelist: ['cart'], // only cache cart
+// };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const composeEnhancer = 
-(process.env.NODE_ENV !== 'production' &&
-  window &&
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||  
-compose;
+// const composeEnhancer = 
+// (process.env.NODE_ENV !== 'production' &&
+//   window &&
+//   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||  
+// compose;
 
-const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
+// const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
-export const store = createStore(
-  persistedReducer,
-  undefined,
-  composedEnhancers
-);
+// export const store = createStore(
+//   persistedReducer,
+//   undefined,
+//   composedEnhancers
+// );
 
-export const persistor = persistStore(store);
+// export const persistor = persistStore(store);
+
+export const store = configureStore({
+  reducer: rootReducer,
+  middleWare: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(middleWares),
+});
+
